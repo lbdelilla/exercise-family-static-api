@@ -10,28 +10,28 @@ from random import randint
 
 class FamilyStructure:
     def __init__(self, last_name):
-        self.last_name = "Jackson"
+        self.last_name = last_name
 
         # example list of members
         self._members = [            {
-                "id": self._generateId(),
+                "id": 1,
                 "first_name": "John",
                 "last_name": self.last_name,
-                "age": "33 Years old",
+                "age": 33,
                 "Lucky Numbers": [7, 13, 22]
             },
             {
-                "id": self._generateId(),
+                "id": 2,
                 "first_name": "Jane",
                 "last_name": self.last_name,
-                "age": "35 Years old",
+                "age": 35,
                 "Lucky Numbers": [10, 14, 3]
             },
             {
-                "id": self._generateId(),
+                "id": 3,
                 "first_name": "Jimmy",
                 "last_name":  self.last_name,
-                "age": "5 Years old",
+                "age": 5,
                 "Lucky Numbers": [1]
             }]
 
@@ -42,34 +42,35 @@ class FamilyStructure:
     def add_member(self, member):
         ## you have to implement this method
         ## append the member to the list of _members
+        # member["id"] = self._generate_id()
+        member["last_name"] = self.last_name
         self._members.append(member)
-        return None
+        return self._members
 
     def delete_member(self, id):
         ## you have to implement this method
         ## loop the list and delete the member with the given id
-        status = False
-        for i, item in enumerate(self._members, start=0):
-            if item["id"] == id:
-                self._members.pop(i)
-            status = True
-        return status
+         for member in self._members:
+            if member["id"] == id:
+                self._members.remove(member)
+                return True
 
-    def update_member(self, id, member):
-        ## you have to implement this method
-        ## loop the list and replace the member with the given id
-        for i, item in enumerate(self._members, start=0):
-            if item["id"] == id:
-                self._members[i] = member
+    # def update_member(self, id, member):
+    #     ## you have to implement this method
+    #     ## loop the list and replace the member with the given id
+    #     pass
 
 
     def get_member(self, id):
         ## you have to implement this method
         ## loop all the members and return the one with the given id
-        for i in self._members:
-            if i["id"] == int(id):
-                return i
+        for member in self._members:
+            if member["id"] == id:
+                return member
      
 
-    def get_all_members(self, id):
+    def get_all_members(self):  
         return self._members
+
+
+     

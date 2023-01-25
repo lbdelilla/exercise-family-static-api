@@ -27,40 +27,51 @@ def sitemap():
     return generate_sitemap(app)
 
 @app.route('/members', methods=['GET'])
-def handle_hello():
+def get_all_members():
+    members = jackson_family.get_all_members()
+    response_body = members
+    if members == None:
+        return jsonify({"message": "Ha ocurrido un error"}), 400
+    return jsonify(response_body), 200
 
-    # this is how you can use the Family datastructure by calling its methods
-    members = jackson_family.get_all_members(id)
-    response_body = {
-        "family": members
-    }
 
+@app.route('/member/<int:id>', methods=['GET'])
+def get_member_by_id(id):
+    response_body = jackson_family.get_member(id)
+    if response_body == None:
+        return jsonify({"message": "Ha ocurrido un error"}), 400
 
     return jsonify(response_body), 200
 
 
-@app.route("/members/<int:id>", methods = ["GET"])
-def members_by_id(id):
-    member = jackson_family.get_member(id)
-    return jsonify(member) , 200
-
-
 @app.route('/member', methods=['POST'])
-def addNewMember():
-    # fill this method and update the return
-    request_body = json.loads(request.data)
-    jackson_family.add_member(request_body)
-    return jsonify(request_body)
+def add_member():
+    request_body = request.json
+    member = {'id': request_body['id'] or jackson_family._generateId(),
+              'first_name': request_body['first_name'],
+              'age': request_body['age'],
+              'lucky_numbers': request_body['lucky_numbers']}
+    if member == None:
+        return jsonify({"message": "Ha ocurrido un error"}), 400
+    response_body = jackson_family.add_member(member)
+    return jsonify(response_body), 200
 
 
 @app.route('/member/<int:id>', methods=['DELETE'])
-def deleteOneMember(id):
-    # fill this method and update the return
-    jackson_family.delete_member(id)
-    return jsonify({"done":True}) , 200
+def delete_member(id):
+    response_body = {"done": jackson_family.delete_member(id)}
+    if response_body == None:
+        return jsonify({"message": "Ha ocurrido un error"}), 400
+    return jsonify(response_body), 200
 
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
     app.run(host='0.0.0.0', port=PORT, debug=True)
+
+
+
+
+
+
